@@ -48,34 +48,20 @@ p.bold {
     font-weight: bold;
     text-indent: 0;
 }
-h2 {
-	margin-bottom: 3pt;
-	margin-top: 12pt;
-	font-family: Arial, serif;
-	font-size: 14pt;
-	font-weight: bold;
-}
-h3 {
+h1 {
 	margin-bottom: 3pt;
 	margin-top: 12pt;
 	font-family: Arial, serif;
 	font-size: 13pt;
 	font-weight: bold;
 }
-h4 {
+h2 {
     margin-bottom: 6pt;
     margin-top: 8pt;
     font-family: Arial, serif;
     font-size: 12pt;
     font-style: italic;
     font-weight: normal;
-}
-h5 {
-	margin-bottom: 3pt;
-	margin-top: 6pt;
-	font-family: Arial, serif;
-	font-size: 11pt;
-	font-weight: normal;
 }
 .alert {
 	font-weight: bold;

@@ -1,53 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet
-        version="1.0"
-        xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-        xmlns:xs="http://www.w3.org/2001/XMLSchema"
-        xmlns="http://www.w3.org/1999/xhtml">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml">
 
-<xsl:output media-type="text/html" method="html" encoding="utf-8" omit-xml-declaration="yes"
-                doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"
-                indent="yes" version="1.0"/>
+<xsl:output media-type="text/html" method="html" encoding="utf-8" omit-xml-declaration="yes"  indent="yes" version="1.0"
+            doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
+            doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"/>
+    <!--Current schema namespace-->
+    <xsl:variable name="rootNamespace" select="/xs:schema/@targetNamespace"/>
+    <!--Current schema namespace prefix-->
+    <xsl:variable name="rootPrefix" select="name(//namespace::*[. = $rootNamespace])"/>
+    <!--XSD prefix (usually used with xs: or xsd: preffixes)-->
+    <xsl:variable name="xsdPrefix" select="name(//namespace::*[. = 'http://www.w3.org/2001/XMLSchema'])"/>
 
-    <!--Глобальная переменная: пространство имён схемы-->
-    <xsl:variable name="rootSchemaNamespace" select="/xs:schema/@targetNamespace"/>
-    <!--Глобальная переменная: префикс элементов схемы-->
-    <xsl:variable name="rootSchemaPrefix" select="name(//namespace::*[. = $rootSchemaNamespace])"/>
-    <!--Глобальная переменная: пространство имён XML Schema (XSD)-->
-    <xsl:variable name="xsdNamespace">http://www.w3.org/2001/XMLSchema</xsl:variable>
-    <xsl:variable name="xsdPrefix" select="name(//namespace::*[. = $xsdNamespace])"/>
-
-	<xsl:template match="/">
-		<xsl:apply-templates select="/xs:schema"/>
-	</xsl:template>
+	<xsl:template match="/"><xsl:apply-templates select="/xs:schema"/></xsl:template>
 
 	<xsl:template match="xs:schema">
-        <!--В названии выводим только первую аннотацию, чтобы избежать появления строки "Локальные прикладные типы"-->
-		<h3><xsl:apply-templates select="./xs:annotation[position() = 1]" mode="Doc"/></h3>
-		<p class="bold">Пространство имен:</p>
-		<p class="elementName"><xsl:value-of select="$rootSchemaNamespace"/></p>
-        <xsl:if test="$rootSchemaPrefix != ''">
-            <p class="bold">Префикс пространства имен:</p>
-            <p class="elementName"><xsl:value-of select="$rootSchemaPrefix"/></p>
+        <!--Print only the first annotation in schema-->
+		<xsl:if test="./xs:annotation">
+            <h1><xsl:apply-templates select="./xs:annotation[position() = 1]" mode="Doc"/></h1>
         </xsl:if>
-
+        <xsl:if test="$rootNamespace != ''">
+            <p>Schema namespace: <span class="elementName"><xsl:value-of select="$rootNamespace"/></span></p>
+        </xsl:if>
+        <xsl:if test="$rootPrefix != ''">
+            <p>Schema namespace prefix: <span class="elementName"><xsl:value-of select="$rootPrefix"/></span></p>
+        </xsl:if>
         <xsl:if test="count(./@version) > 0">
-            <p class="bold">Версия:</p>
-            <p class="elementName">
-                <xsl:value-of select="./@version"/>
-            </p>
+            <p>Schema version: <span class="elementName"><xsl:value-of select="./@version"/></span></p>
         </xsl:if>
-
-        <xsl:if test="count(//xs:import) > 0">
-            <p class="bold">Импортируемые пространства имен:</p>
-            <!--Обрабатываем xs:import, независимо от их положения в документе-->
-            <xsl:apply-templates select="//xs:import"/>
+        <xsl:if test="count(./xs:import) > 0">
+            <p>Импортируемые пространства имен:</p>
+            <xsl:apply-templates select="./xs:import"/>
         </xsl:if>
-
-        <!--Обрабатываем корневые элементы, объявленные в схеме-->
+        <!--Processing root elements declared in schema-->
 		<xsl:apply-templates select="xs:element" mode="root"/>
-
-        <!--Сложные типы, объявленные в этой же схеме-->
+        <!--Processing complex types declared in schema-->
 <!--
         <xsl:variable name="internalComplexTypes" select="./xs:complexType[./@name != substring-after($rootElements/@type, ':')]"/>
         <xsl:if test="count($internalComplexTypes) > 0">
@@ -59,28 +45,23 @@
 -->
 	</xsl:template>
 
-    <!--Импортируемые пространства имён-->
+    <!--Imported namespaces description for the head-->
     <xsl:template match="xs:import">
-        <p class="elementName">
-            <xsl:variable name="namespaceURI" select="@namespace"/>
-            <!--Выводим префикс данного namespace. Оно может быть объявлено для любого элемента схемы.
-                Выводим префикс того namespace, URI которого совпадает с URI импортируемой схемы.-->
-            <xsl:value-of select="name(//namespace::*[. = $namespaceURI])"/>: <xsl:value-of select="$namespaceURI"/>
-        </p>
+        <xsl:variable name="namespace" select="@namespace"/>
+        <span class="elementName"><xsl:value-of select="name(//namespace::*[. = $namespace])"/>: <xsl:value-of select="$namespace"/></span>
     </xsl:template>
 
-	<!--Корневой элемент, описываемый схемой-->
+	<!--Global elements description-->
 	<xsl:template match="xs:element" mode="root">
-		<h4>
+		<h2>
             <xsl:if test="@type">
-                <xsl:call-template name="TypeDescription"><xsl:with-param name="fullName" select="@type"/></xsl:call-template>
-                <br/>
+                <xsl:call-template name="TypeDescription"><xsl:with-param name="fullName" select="@type"/></xsl:call-template><br/>
             </xsl:if>
             <span class="elementName"><xsl:value-of select="@name"/></span>
-        </h4>
+        </h2>
 		<table class="items" id="rootElement_{position()}">
 			<tr>
-				<!--JavaScript код будет выставлять нужное значение colspan у ячеек с class="AutoExpanded-->
+				<!--Class AutoExpanded used in JS to determine cells to put colspan="..." in-->
 				<th class="AutoExpanded">Элемент</th>
 				<th>Описание элемента</th>
 				<th>Тип</th>
@@ -194,7 +175,7 @@
                     <!--JavaScript код будет выставлять нужное значение colspan у ячеек с class="*AutoExpanded*"-->
                     <td class="elementName AutoExpanded">
                         <!--Если префикс пространства имён был передан в параметре, выводим его.-->
-                        <xsl:if test="$prefix and $prefix != $rootSchemaPrefix"><xsl:value-of select="$prefix"/>:</xsl:if>
+                        <xsl:if test="$prefix and $prefix != $rootPrefix"><xsl:value-of select="$prefix"/>:</xsl:if>
                         <xsl:value-of select="@name"/>
                     </td>
                     <td><xsl:apply-templates select="./xs:annotation" mode="Doc"/></td>
@@ -361,7 +342,7 @@
                 <xsl:otherwise><xsl:value-of select="$type"/></xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
-        <xsl:if test="$typePrefix != '' and $typePrefix != $rootSchemaPrefix"><xsl:value-of select="$typePrefix"/>:</xsl:if>
+        <xsl:if test="$typePrefix != '' and $typePrefix != $rootPrefix"><xsl:value-of select="$typePrefix"/>:</xsl:if>
         <xsl:value-of select="$typeName"/>
         <xsl:if test="count($extendedType) > 0"><br/><i> (тип расширен)</i></xsl:if>
         <xsl:if test="@fixed"><br/>Fixed: "<xsl:value-of select="@fixed"/>"</xsl:if>
