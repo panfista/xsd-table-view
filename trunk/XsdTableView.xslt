@@ -415,14 +415,12 @@
         <xsl:variable name="childParents" select="concat($parents, $fullName, ';')"/>
         <xsl:choose>
             <!--Цикл: тип элемента такой же, как у одного из родителей-->
-            <!--
             <xsl:when test="contains($parents, concat($fullName, ';'))">
                 <tr>
                     <xsl:call-template name="BlankCells"><xsl:with-param name="count" select="$level"/></xsl:call-template>
                     <td class="AutoExpanded">Тип <b><xsl:value-of select="$fullName"/></b> образует цикл</td>
                 </tr>
             </xsl:when>
-            -->
 
             <!--Ничего не делаем в случае простых типов XML Schema, потому что в этом шаблоне ищутся дочерние элементы-->
             <xsl:when test="($prefix = '' or $prefix = $xsdPrefix) and ($name = 'string' or $name = 'decimal' or $name = 'base64Binary'
