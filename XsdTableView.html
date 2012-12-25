@@ -58,7 +58,7 @@
         function checkBrowser() {
             var browser = navigator.appName;
             var version = navigator.appVersion;
-            if (browser.indexOf('Internet Explorer') < 0 || (version.indexOf('MSIE 8') < 0 && version.indexOf('MSIE 9') < 0)) {
+            if (browser.indexOf('Internet Explorer') < 0 || (version.indexOf('MSIE 8') < 0 && version.indexOf('MSIE 9') < 0 && version.indexOf('MSIE 10') < 0)) {
                 var error = "<strong>Для рабoты данного преобразования необходим Microsoft Internet Explorer версии 8 и выше.</strong>";
                 error += "<p><strong>Текущий браузер:</strong> " + browser + "</p>";
                 error += "<p><strong>Версия:</strong> " + version + "</p>";
