@@ -4,7 +4,7 @@
 	<xsl:template match="/">
 		<html>
 			<head>
-				<title>Все корневые элементы взаимодействий СББОЛ и СБК с АБС</title>
+				<title>Root elements of the schema</title>
 			</head>
 			<style type="text/css">
 				table {border: none; border-collapse: collapse}
@@ -15,8 +15,8 @@
 				<table>
 					<tbody>
 						<tr>
-							<th>Корневой элемент КСШ</th>
-							<th>Название взаимодействия</th>
+							<th>Root element</th>
+							<th>Annotation</th>
 						</tr>
 						<xsl:apply-templates select="/xs:schema/xs:element"/>
 					</tbody>
