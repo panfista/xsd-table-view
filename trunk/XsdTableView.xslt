@@ -423,7 +423,7 @@
             </xsl:when>
 
             <!--Ничего не делаем в случае простых типов XML Schema, потому что в этом шаблоне ищутся дочерние элементы-->
-            <xsl:when test="($prefix = '' or $prefix = $xsdPrefix) and ($name = 'string' or $name = 'decimal' or $name = 'base64Binary'
+            <xsl:when test="($prefix = '' or $prefix = $xsdPrefix) and ($name = 'string' or $name = 'decimal' or $name = 'base64Binary' or $name = 'float' or $name = 'short'
              or $name = 'integer' or $name = 'boolean' or $name = 'date' or $name = 'time' or $name = 'dateTime' or $name = 'long' or $name = 'int' or  $name = 'unsignedLong' or $name = 'unsignedByte')"/>
 
             <xsl:when test="$prefix = '' or $prefix = $schemaPrefix">
