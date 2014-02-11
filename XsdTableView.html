@@ -1,6 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
+ 	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Генератор описаний схем XSD в виде таблицы</title>
     <link rel="stylesheet" type="text/css" href="XsdTableView.css"/>
@@ -15,7 +16,7 @@
             xslt.async = false;
             xslt.load("XsdTableView.xslt");
 
-            /* Добавляем в DIV результат XSLT */
+            /* Add XSLT transformation result to the DIV */
             document.getElementById('content').innerHTML += schema.transformNode(xslt);
 
             for(var i = 1; i < 256; i++){
@@ -70,9 +71,9 @@
 </head>
 <body onload="checkBrowser();" id="body">
 <input type="file" id="fileChooser" title="Выберите схему"/>
-<button onclick="processFile(document.getElementById('fileChooser').value);">Обработать выбранный файл</button>
-<button onclick="clearDiv();" id="clearButton" style="visibility: hidden;">Очистить</button>
-<button onclick="select('content');" id="selectButton" style="visibility: hidden;">Выделить текст</button>
+<button onclick="processFile(document.getElementById('fileChooser').value);">Process</button>
+<button onclick="clearDiv();" id="clearButton" style="visibility: hidden;">Clear</button>
+<button onclick="select('content');" id="selectButton" style="visibility: hidden;">Select the result</button>
 <hr/>
 <div id="content"></div>
 </body>
