@@ -28,7 +28,7 @@
             <p>Schema version: <span class="elementName"><xsl:value-of select="./@version"/></span></p>
         </xsl:if>
         <xsl:if test="count(./xs:import) > 0">
-            <p>Импортируемые пространства имен:</p>
+            <p>Imported namespaces:</p>
             <xsl:apply-templates select="./xs:import"/>
         </xsl:if>
         <!--Processing root elements declared in schema-->
@@ -62,11 +62,11 @@
 		<table class="items" id="rootElement_{position()}">
 			<tr>
 				<!--Class AutoExpanded used in JS to determine cells to put colspan="..." in-->
-				<th class="AutoExpanded">Элемент</th>
-				<th>Описание элемента</th>
-				<th>Тип</th>
-				<th>Описание типа</th>
-				<th>Мн.</th>
+				<th class="AutoExpanded">Entity</th>
+				<th>Entity description</th>
+				<th>Type</th>
+				<th>Type description</th>
+				<th>Cardinality</th>
 			</tr>
 			<xsl:apply-templates select="."/>
 		</table>
