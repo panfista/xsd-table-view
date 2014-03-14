@@ -414,7 +414,7 @@
         </xsl:variable>
         <xsl:variable name="childParents" select="concat($parents, $fullName, ';')"/>
         <xsl:choose>
-            <!--Цикл: тип элемента такой же, как у одного из родителей-->
+            <!--Cycle detected: the type of the element is the same as of one of its ancestors-->
             <xsl:when test="contains($parents, concat($fullName, ';'))">
                 <tr>
                     <xsl:call-template name="BlankCells"><xsl:with-param name="count" select="$level"/></xsl:call-template>
@@ -422,15 +422,15 @@
                 </tr>
             </xsl:when>
 
-            <!--Ничего не делаем в случае простых типов XML Schema, потому что в этом шаблоне ищутся дочерние элементы-->
+            <!--Do nothing with XML Schema simple types-->
             <xsl:when test="($prefix = '' or $prefix = $xsdPrefix) and ($name = 'string' or $name = 'decimal' or $name = 'base64Binary' or $name = 'float' or $name = 'short'
-             or $name = 'integer' or $name = 'boolean' or $name = 'date' or $name = 'time' or $name = 'dateTime' or $name = 'long' or $name = 'int' or  $name = 'unsignedLong' or $name = 'unsignedByte')"/>
+             or $name = 'integer' or $name = 'positiveInteger' or $name = 'boolean' or $name = 'date' or $name = 'time' or $name = 'dateTime' or $name = 'long' or $name = 'int' or  $name = 'unsignedLong' or $name = 'unsignedByte')"/>
 
             <xsl:when test="$prefix = '' or $prefix = $schemaPrefix">
-                <!--Тип объявлен внутри схемы-->
-                <!--Все схемы, которые include в данную (другие XSD, но с тем же namespace)-->
+                <!--The type is declared within current schema-->
+                <!--All schemas included in current (another XSDs with the same namespace)-->
                 <xsl:variable name="includedSchemas" select="document(/xs:schema/xs:include/@schemaLocation)"/>
-                <!--Все схемы, которые рекурсивно include в схемы, которые include в данную (другие XSD, но с тем же namespace)-->
+                <!--All schemas recursively included in the schemas that are included in currnt(another XSDs with the same namespace)-->
                 <xsl:variable name="includedSchemasRecurse" select="document($includedSchemas/xs:schema/xs:include/@schemaLocation)"/>
                 <xsl:variable
                         name="currNamespType"
@@ -439,7 +439,7 @@
                         $includedSchemasRecurse/xs:schema/xs:complexType[@name = $name] | $includedSchemasRecurse/xs:schema/xs:simpleType[@name = $name]"/>
 
                 <xsl:choose>
-                    <!--Проверяем наличие типа в текущем namespace-->
+                    <!--Checking the existence of the type in current namespace-->
                     <xsl:when test="count($currNamespType) = 1">
                         <xsl:apply-templates select="$currNamespType">
                             <xsl:with-param name="level" select="$level"/>
@@ -451,7 +451,7 @@
                     <xsl:otherwise>
                         <tr>
                             <xsl:call-template name="BlankCells"><xsl:with-param name="count" select="$level"/></xsl:call-template>
-                            <td class="alert AutoExpanded">Тип "<xsl:value-of select="$fullName"/>" в текущем namespace не найден!</td>
+                            <td class="alert AutoExpanded">Type "<xsl:value-of select="$fullName"/>" is not found in current namespace</td>
                         </tr>
                     </xsl:otherwise>
                 </xsl:choose>
@@ -491,7 +491,7 @@
                                 <xsl:with-param name="count" select="$level"/>
                             </xsl:call-template>
                             <td class="alert AutoExpanded">
-                                Файл "<xsl:value-of select="$file"/>" не найден! Ошибка поиска типа "<xsl:value-of select="$fullName"/>"
+                                File "<xsl:value-of select="$file"/>" not found. Error while searching for the "<xsl:value-of select="$fullName"/> type"
                             </td>
                         </tr>
                     </xsl:otherwise>
